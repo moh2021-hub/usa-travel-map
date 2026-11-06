@@ -1,0 +1,30 @@
+# Starts PostgreSQL for local development:
+#
+#   cd database
+#   docker compose up -d
+#
+# The first start runs every .sql file in ./init in name order
+# (schema, then states, then cities). To start over from scratch:
+#
+#   docker compose down -v && docker compose up -d
+services:
+  db:
+    image: postgres:16
+    container_name: travelmap-db
+    environment:
+      POSTGRES_DB: travelmap
+      POSTGRES_USER: travelmap
+      POSTGRES_PASSWORD: travelmap
+    ports:
+      - "5432:5432"
+    volumes:
+      - travelmap-data:/var/lib/postgresql/data
+      - ./init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U travelmap -d travelmap"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  travelmap-data:

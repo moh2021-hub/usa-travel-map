@@ -1,0 +1,102 @@
+# Try the API without the frontend.
+# Works in IntelliJ IDEA (built in) and VS Code (REST Client extension):
+# click "Send Request" above any request. Run "Register" or "Log in" first -
+# the token is saved and used by the requests that need a login.
+
+@baseUrl = http://localhost:8080
+
+### Register
+# @name register
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "sam@example.com",
+  "password": "correct-horse-battery",
+  "displayName": "Sam"
+}
+
+> {% client.global.set("token", response.body.token); %}
+
+### Log in
+# @name login
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "sam@example.com",
+  "password": "correct-horse-battery"
+}
+
+> {% client.global.set("token", response.body.token); %}
+
+### Who am I
+GET {{baseUrl}}/api/me
+Authorization: Bearer {{token}}
+
+### All states
+GET {{baseUrl}}/api/states
+
+### Cities in Michigan with 50,000+ people
+GET {{baseUrl}}/api/states/MI/cities?minPopulation=50000
+
+### Search cities
+GET {{baseUrl}}/api/cities/search?q=detr&limit=5
+
+### Nearest city to a point
+GET {{baseUrl}}/api/cities/nearest?lat=42.58&lon=-82.95
+
+### Mark Michigan as visited
+PUT {{baseUrl}}/api/me/visits/states/MI
+Authorization: Bearer {{token}}
+
+### Mark Detroit as visited (4990729 is Detroit's id)
+PUT {{baseUrl}}/api/me/visits/cities/4990729
+Authorization: Bearer {{token}}
+
+### Mark the United States as visited (840 is its ISO number)
+PUT {{baseUrl}}/api/me/visits/countries/840
+Authorization: Bearer {{token}}
+
+### Everything I have marked
+GET {{baseUrl}}/api/me/visits
+Authorization: Bearer {{token}}
+
+### Add places picked while logged out
+POST {{baseUrl}}/api/me/visits/merge
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "states": ["OH", "CA"],
+  "countries": ["124"],
+  "cityIds": [5368361]
+}
+
+### Unmark Michigan
+DELETE {{baseUrl}}/api/me/visits/states/MI
+Authorization: Bearer {{token}}
+
+### Save settings
+PUT {{baseUrl}}/api/me/settings
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "theme": "night",
+  "showLabels": false
+}
+
+### Read settings
+GET {{baseUrl}}/api/me/settings
+Authorization: Bearer {{token}}
+
+### Create my share link
+# @name share
+POST {{baseUrl}}/api/share
+Authorization: Bearer {{token}}
+
+> {% client.global.set("slug", response.body.slug); %}
+
+### View a shared map (no login)
+GET {{baseUrl}}/api/share/{{slug}}

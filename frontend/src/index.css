@@ -1,0 +1,98 @@
+@import "tailwindcss";
+@import "@fontsource-variable/overpass";
+
+/*
+  Design tokens. The look borrows from US highway signs: sign green, white
+  borders, lane-marking yellow, and Overpass, a typeface drawn from the
+  lettering used on those signs.
+*/
+@theme {
+  --font-sans: "Overpass Variable", "Segoe UI", Arial, sans-serif;
+
+  --color-sign: #006747;
+  --color-sign-dark: #00513a;
+  --color-lane: #ffcd00;
+  --color-asphalt: #1d2327;
+  --color-gravel: #59636a;
+  --color-concrete: #eceeea;
+  --color-curb: #cfd4cd;
+}
+
+body {
+  margin: 0;
+  background: var(--color-concrete);
+  color: var(--color-asphalt);
+  font-family: var(--font-sans);
+}
+
+/* One clear keyboard focus style everywhere. */
+:focus-visible {
+  outline: 3px solid var(--color-lane);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 5px var(--color-asphalt);
+}
+
+/* Clickable shapes and dots on the maps. */
+.map-region {
+  cursor: pointer;
+  transition: filter 120ms;
+}
+.map-region:hover {
+  filter: brightness(0.92);
+}
+
+/* The green panel that shows the totals, built like a highway distance sign. */
+.road-sign {
+  background: var(--color-sign);
+  color: #fff;
+  border-radius: 14px;
+  padding: 5px;
+}
+.road-sign > .road-sign-face {
+  border: 2.5px solid #fff;
+  border-radius: 10px;
+  padding: 14px 18px;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  border: 1.5px solid var(--color-asphalt);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--color-asphalt);
+  font-weight: 600;
+  padding: 0.45rem 0.9rem;
+  cursor: pointer;
+}
+.button:hover {
+  background: var(--color-concrete);
+}
+.button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.button-primary {
+  background: var(--color-sign);
+  border-color: var(--color-sign);
+  color: #fff;
+}
+.button-primary:hover {
+  background: var(--color-sign-dark);
+}
+
+.field {
+  width: 100%;
+  border: 1.5px solid var(--color-gravel);
+  border-radius: 6px;
+  background: #fff;
+  padding: 0.5rem 0.7rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .map-region {
+    transition: none;
+  }
+}
